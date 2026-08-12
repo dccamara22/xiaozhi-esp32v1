@@ -1,6 +1,8 @@
 #include "dfplayer.h"
 #include <driver/uart.h>
 #include <esp_log.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 #include <cstring>
 
 static const char* TAG = "DFPlayer";
@@ -41,7 +43,9 @@ bool DFPlayer::Init(int baud_rate) {
 uint16_t DFPlayer::Checksum(uint8_t *packet, int len) {
     // checksum = 0 - (version + length + command + feedback + paramHi + paramLo)
     uint16_t sum = 0;
-    for (int i = 1; i < 7; ++i) { // indices 1..6 for version..paramLo (packet layout below)
+    // Ensure we don't read past provided len; packet layout expects indices 1..6
+    int end = (len >= 7) ? 7 : len;
+    for (int i = 1; i < end; ++i) { // indices 1..6 for version..paramLo (packet layout below)
         sum += packet[i];
     }
     uint16_t chk = 0 - sum;
@@ -62,7 +66,11 @@ void DFPlayer::SendCommand(uint8_t command, uint16_t parameter) {
     packet[8] = chk & 0xFF;
     packet[9] = 0xEF;           // end
 
-    uart_write_bytes(uart_num_, (const char*)packet, sizeof(packet));
+    // Write packet
+    int written = uart_write_bytes(uart_num_, reinterpret_cast<const char*>(packet), sizeof(packet));
+    if (written != sizeof(packet)) {
+        ESP_LOGW(TAG, "uart_write_bytes wrote %d of %d", written, (int)sizeof(packet));
+    }
     // small delay to let DFPlayer process
     vTaskDelay(pdMS_TO_TICKS(50));
 }
