@@ -6,11 +6,14 @@
 #include <esp_event.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
+#include "sdkconfig.h"
 
 #include "application.h"
 
 // Declaration of the dfplayer starter function in main/dfplayer_task.cc
+#ifdef CONFIG_DFPLAYER_ENABLE
 extern "C" void start_dfplayer_task(void);
+#endif
 
 #define TAG "main"
 
@@ -29,8 +32,12 @@ extern "C" void app_main(void)
     auto& app = Application::GetInstance();
     app.Initialize();
 
-    // Start DFPlayer task (UART1)
+#ifdef CONFIG_DFPLAYER_ENABLE
+#if CONFIG_DFPLAYER_AUTO_START
+    // Start DFPlayer task (UART configured in menuconfig)
     start_dfplayer_task();
+#endif
+#endif
 
     app.Run();  // This function runs the main event loop and never returns
 }

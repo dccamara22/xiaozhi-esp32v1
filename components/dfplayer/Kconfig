@@ -1,0 +1,31 @@
+menu "DFPlayer configuration"
+
+config DFPLAYER_ENABLE
+    bool "Enable DFPlayer support"
+    default y
+
+config DFPLAYER_UART_NUM
+    int "UART port number for DFPlayer (1 or 2)"
+    default 1
+
+config DFPLAYER_TX_PIN
+    int "ESP TX -> DFPlayer RX pin"
+    default 17
+
+config DFPLAYER_RX_PIN
+    int "ESP RX <- DFPlayer TX pin"
+    default 16
+
+config DFPLAYER_BAUD
+    int "DFPlayer UART baud rate"
+    default 9600
+
+config DFPLAYER_AUTO_START
+    bool "Start DFPlayer task on boot"
+    default y
+
+config DFPLAYER_VOLUME
+    int "Default DFPlayer volume (0-30)"
+    default 20
+
+endmenu
