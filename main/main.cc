@@ -9,6 +9,9 @@
 
 #include "application.h"
 
+// Declaration of the dfplayer starter function in main/dfplayer_task.cc
+extern "C" void start_dfplayer_task(void);
+
 #define TAG "main"
 
 extern "C" void app_main(void)
@@ -25,5 +28,9 @@ extern "C" void app_main(void)
     // Initialize and run the application
     auto& app = Application::GetInstance();
     app.Initialize();
+
+    // Start DFPlayer task (UART1)
+    start_dfplayer_task();
+
     app.Run();  // This function runs the main event loop and never returns
 }
