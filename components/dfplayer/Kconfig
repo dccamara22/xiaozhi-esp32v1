@@ -10,14 +10,14 @@ config DFPLAYER_UART_NUM
 
 config DFPLAYER_TX_PIN
     int "ESP TX -> DFPlayer RX pin"
-    # Default pins for Bread Compact WiFi board: use GPIO18 for TX to avoid I2S conflicts
-    default 18 if CONFIG_BOARD_TYPE_BREAD_COMPACT_WIFI
+    # Default pins for Bread Compact WiFi board: use GPIO17 for TX to minimize conflicts
+    default 17 if CONFIG_BOARD_TYPE_BREAD_COMPACT_WIFI
     default 17
 
 config DFPLAYER_RX_PIN
     int "ESP RX <- DFPlayer TX pin"
-    # Default pins for Bread Compact WiFi board: use GPIO17 for RX
-    default 17 if CONFIG_BOARD_TYPE_BREAD_COMPACT_WIFI
+    # Default pins for Bread Compact WiFi board: use GPIO38 for RX to avoid collisions
+    default 38 if CONFIG_BOARD_TYPE_BREAD_COMPACT_WIFI
     default 16
 
 config DFPLAYER_BAUD
