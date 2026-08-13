@@ -2,7 +2,7 @@ menu "DFPlayer configuration"
 
 config DFPLAYER_ENABLE
     bool "Enable DFPlayer support"
-    default y
+    default y if CONFIG_BOARD_TYPE_BREAD_COMPACT_WIFI
 
 config DFPLAYER_UART_NUM
     int "UART port number for DFPlayer (1 or 2)"
@@ -10,10 +10,14 @@ config DFPLAYER_UART_NUM
 
 config DFPLAYER_TX_PIN
     int "ESP TX -> DFPlayer RX pin"
+    # Default pins for Bread Compact WiFi board: use GPIO18 for TX to avoid I2S conflicts
+    default 18 if CONFIG_BOARD_TYPE_BREAD_COMPACT_WIFI
     default 17
 
 config DFPLAYER_RX_PIN
     int "ESP RX <- DFPlayer TX pin"
+    # Default pins for Bread Compact WiFi board: use GPIO17 for RX
+    default 17 if CONFIG_BOARD_TYPE_BREAD_COMPACT_WIFI
     default 16
 
 config DFPLAYER_BAUD
